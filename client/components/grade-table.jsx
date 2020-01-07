@@ -15,13 +15,13 @@ class GradeTable extends React.Component {
         />);
     });
     return (
-      <table className='ml-5 mt-4 col-8 table table-bordered table-dark table-striped'>
+      <table className='mx-auto my-3 col-11 col-xl-8 table table-bordered table-dark table-striped'>
         <thead className='bg-info'>
           <tr>
-            <th className='col'>Student Name</th>
-            <th className='col'>Course</th>
-            <th className='col'>Grade</th>
-            <th className='col'>Operation</th>
+            <th className='col-3'>Student Name</th>
+            <th className='col-2'>Course</th>
+            <th className='col-2'>Grade</th>
+            <th className='col-3'>Operation</th>
           </tr>
         </thead>
         <tbody>

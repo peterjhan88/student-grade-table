@@ -14,11 +14,11 @@ class App extends React.Component {
 
   Header(props) {
     return (
-      <div className='col-12 d-flex justify-content-center flex-wrap'>
-        <div className='col-8 sgt-title'>{props.titleText}</div>
-        <div className='col-4 d-flex align-items-center justify-content-center'>
-          <div className='average-label col-8'>Average Grade</div>
-          <div className='col-4 border border-dark bg-secondary average-grade d-flex justify-content-center'>{props.averageGrade}</div>
+      <div className='col-12 col-xl-12 d-flex flex-wrap justify-content-center'>
+        <div className='col-12 col-xl-6 sgt-title'>{props.titleText}</div>
+        <div className='col-12 col-xl-6 d-flex align-items-center justify-content-center justify-content-sm-center justify-content-xl-end'>
+          <div className='col-6 col-sm-4 col-md-5 col-lg-4 col-xl-6 average-label'>Average Grade</div>
+          <div className='border border-dark bg-secondary average-grade d-flex justify-content-center justify-content-lg-center'>{props.averageGrade}</div>
         </div>
       </div>
     );

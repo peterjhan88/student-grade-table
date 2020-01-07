@@ -13,10 +13,10 @@ class Grade extends React.Component {
   render() {
     return (
       <tr>
-        <td className='col'>{this.props.name}</td>
-        <td className='col'>{this.props.course}</td>
-        <td className='col'>{this.props.grade}</td>
-        <td className='col'>
+        <td className='col-3'>{this.props.name}</td>
+        <td className='col-2'>{this.props.course}</td>
+        <td className='col-2'>{this.props.grade}</td>
+        <td className='col-3'>
           <div className='btn btn-danger' onClick={this.handleDelete}>DELETE</div>
         </td>
       </tr>
