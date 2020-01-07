@@ -35,12 +35,7 @@ class App extends React.Component {
         this.setState(previousState => {
           var newGrades = previousState.grades;
           newGrades.push(jsonData);
-          return {
-            grades: newGrades,
-            name: '',
-            course: '',
-            grade: ''
-          };
+          return { grades: newGrades };
         });
       })
       .catch(error => {
@@ -61,12 +56,7 @@ class App extends React.Component {
               newGrades.splice(index, 1);
             }
           }
-          return {
-            grades: newGrades,
-            name: '',
-            course: '',
-            grade: ''
-          };
+          return { grades: newGrades };
         });
       })
       .catch(error => {
