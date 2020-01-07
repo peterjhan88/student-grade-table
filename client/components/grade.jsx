@@ -1,12 +1,24 @@
 import React from 'react';
 
 class Grade extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleDelete = this.handleDelete.bind(this);
+  }
+
+  handleDelete(event) {
+    this.props.handleDeleteButtonClick(this.props.id);
+  }
+
   render() {
     return (
       <tr>
-        <td className='col-6'>{this.props.name}</td>
-        <td className='col-4'>{this.props.course}</td>
-        <td className='col-2'>{this.props.grade}</td>
+        <td className='col'>{this.props.name}</td>
+        <td className='col'>{this.props.course}</td>
+        <td className='col'>{this.props.grade}</td>
+        <td className='col'>
+          <div className='btn btn-danger' onClick={this.handleDelete}>DELETE</div>
+        </td>
       </tr>
     );
   }

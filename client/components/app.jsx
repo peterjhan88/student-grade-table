@@ -9,6 +9,7 @@ class App extends React.Component {
       grades: []
     };
     this.addInputs = this.addInputs.bind(this);
+    this.deleteGrade = this.deleteGrade.bind(this);
   }
 
   Header(props) {
@@ -34,12 +35,28 @@ class App extends React.Component {
         this.setState(previousState => {
           var newGrades = previousState.grades;
           newGrades.push(jsonData);
-          return {
-            grades: newGrades,
-            name: '',
-            course: '',
-            grade: ''
-          };
+          return { grades: newGrades };
+        });
+      })
+      .catch(error => {
+        console.error(error.message);
+      });
+  }
+
+  deleteGrade(targetId) {
+    fetch(`/api/grades/${targetId}`, {
+      method: 'DELETE'
+    })
+      .then(response => response.json())
+      .then(jsonData => {
+        this.setState(previousState => {
+          var newGrades = previousState.grades;
+          for (var index = 0; index < newGrades.length; index++) {
+            if (newGrades[index].id === parseInt(targetId)) {
+              newGrades.splice(index, 1);
+            }
+          }
+          return { grades: newGrades };
         });
       })
       .catch(error => {
@@ -77,7 +94,7 @@ class App extends React.Component {
       <>
         <this.Header titleText='Student Grade Table' averageGrade={this.getAverageGrade()}/>
         <div className='d-flex flex-wrap'>
-          <GradeTable grades={this.state.grades} />
+          <GradeTable grades={this.state.grades} handleDeleteButtonClick={this.deleteGrade}/>
           <GradeForm onSubmit={this.addInputs} />
         </div>
       </>
