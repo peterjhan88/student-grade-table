@@ -19,12 +19,6 @@
       "grade": 100
     },
     {
-      "id": 4,
-      "name": "Dummy Data",
-      "course": "JavaScript",
-      "grade": 0
-    },
-    {
       "name": "test",
       "course": "dummy",
       "grade": 100,
