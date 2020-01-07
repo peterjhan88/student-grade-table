@@ -1,24 +1,64 @@
 import React from 'react';
 import GradeTable from './grade-table';
+import GradeForm from './grade-form';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      grades: []
+      grades: [],
+      name: '',
+      course: '',
+      grade: ''
     };
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.addInputs = this.addInputs.bind(this);
+    this.handleCancelButtonClick = this.handleCancelButtonClick.bind(this);
   }
 
   Header(props) {
     return (
-      <div className='ml-5 mt-4 w-75 row d-flex justify-content-between'>
-        <div className='sgt-title'>{props.titleText}</div>
-        <div className='d-flex align-items-center'>
-          <div className='mr-3 average-label'>Average Grade</div>
-          <div className='border border-dark bg-secondary average-grade d-flex justify-content-center'>{props.averageGrade}</div>
+      <div className='col-12 d-flex justify-content-center flex-wrap'>
+        <div className='col-8 sgt-title'>{props.titleText}</div>
+        <div className='col-4 d-flex align-items-center justify-content-center'>
+          <div className='average-label col-8'>Average Grade</div>
+          <div className='col-4 border border-dark bg-secondary average-grade d-flex justify-content-center'>{props.averageGrade}</div>
         </div>
       </div>
     );
+  }
+
+  handleInputChange(changedInput) {
+    this.setState(changedInput);
+  }
+
+  addInputs(newGrade) {
+    event.preventDefault();
+    fetch('/api/grades/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newGrade)
+    })
+      .then(response => response.json())
+      .then(jsonData => {
+        this.setState(previousState => {
+          var newGrades = previousState.grades;
+          newGrades.push(jsonData);
+          return { grades: newGrades };
+        });
+      })
+      .catch(error => {
+        console.error(error.message);
+      });
+  }
+
+  handleCancelButtonClick() {
+    event.preventDefault();
+    this.setState({
+      name: '',
+      course: '',
+      grade: ''
+    });
   }
 
   componentDidMount() {
@@ -43,14 +83,24 @@ class App extends React.Component {
     for (var index = 0; index < theLength; index++) {
       sum += this.state.grades[index].grade;
     }
-    return sum / theLength;
+    return Math.round(sum / theLength);
   }
 
   render() {
     return (
       <>
         <this.Header titleText='Student Grade Table' averageGrade={this.getAverageGrade()}/>
-        <GradeTable grades={this.state.grades}/>
+        <div className='d-flex'>
+          <GradeTable grades={this.state.grades}/>
+          <GradeForm
+            onSubmit={this.addInputs}
+            handleInputChange={this.handleInputChange}
+            handleCancelButtonClick={this.handleCancelButtonClick}
+            nameValue={this.state.name}
+            courseValue={this.state.course}
+            gradeValue={this.state.grade}
+          />
+        </div>
       </>
     );
   }
