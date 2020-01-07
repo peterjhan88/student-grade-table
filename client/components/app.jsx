@@ -44,6 +44,7 @@ class App extends React.Component {
         this.setState(previousState => {
           var newGrades = previousState.grades;
           newGrades.push(jsonData);
+          this.clearInputs();
           return { grades: newGrades };
         });
       })
@@ -52,13 +53,17 @@ class App extends React.Component {
       });
   }
 
-  handleCancelButtonClick() {
-    event.preventDefault();
+  clearInputs() {
     this.setState({
       name: '',
       course: '',
       grade: ''
     });
+  }
+
+  handleCancelButtonClick() {
+    event.preventDefault();
+    this.clearInputs();
   }
 
   componentDidMount() {
