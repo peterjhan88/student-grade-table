@@ -9,6 +9,7 @@ class GradeForm extends React.Component {
   }
 
   handleSubmit(event) {
+    event.preventDefault();
     var newGrade = {
       name: document.getElementById('name').value,
       course: document.getElementById('course').value,
@@ -24,6 +25,7 @@ class GradeForm extends React.Component {
   }
 
   handleCancel(event) {
+    event.preventDefault();
     var clearInputs = {
       name: '',
       course: '',

@@ -33,7 +33,6 @@ class App extends React.Component {
   }
 
   addInputs(newGrade) {
-    event.preventDefault();
     fetch('/api/grades/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -44,8 +43,12 @@ class App extends React.Component {
         this.setState(previousState => {
           var newGrades = previousState.grades;
           newGrades.push(jsonData);
-          this.clearInputs();
-          return { grades: newGrades };
+          return {
+            grades: newGrades,
+            name: '',
+            course: '',
+            grade: ''
+          };
         });
       })
       .catch(error => {
@@ -53,17 +56,8 @@ class App extends React.Component {
       });
   }
 
-  clearInputs() {
-    this.setState({
-      name: '',
-      course: '',
-      grade: ''
-    });
-  }
-
-  handleCancelButtonClick() {
-    event.preventDefault();
-    this.clearInputs();
+  handleCancelButtonClick(clearInputObject) {
+    this.setState(clearInputObject);
   }
 
   componentDidMount() {
@@ -88,7 +82,7 @@ class App extends React.Component {
     for (var index = 0; index < theLength; index++) {
       sum += this.state.grades[index].grade;
     }
-    return Math.round(sum / theLength);
+    return Math.round(sum / theLength * 10) / 10;
   }
 
   render() {
