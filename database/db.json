@@ -23,6 +23,54 @@
       "name": "Dummy Data",
       "course": "JavaScript",
       "grade": 0
+    },
+    {
+      "name": "test",
+      "course": "dummy",
+      "grade": 100,
+      "id": 5
+    },
+    {
+      "name": "test2",
+      "course": "test3",
+      "grade": 1231241,
+      "id": 6
+    },
+    {
+      "name": "test3",
+      "course": "test3",
+      "grade": 1,
+      "id": 7
+    },
+    {
+      "name": "test4",
+      "course": "test4",
+      "grade": 2,
+      "id": 8
+    },
+    {
+      "name": "asda",
+      "course": "asda",
+      "grade": 1231,
+      "id": 9
+    },
+    {
+      "name": "test5",
+      "course": "test5",
+      "grade": 3,
+      "id": 10
+    },
+    {
+      "name": "test6",
+      "course": "test6",
+      "grade": 4,
+      "id": 11
+    },
+    {
+      "name": "test7",
+      "course": "test7",
+      "grade": 12,
+      "id": 12
     }
   ]
 }

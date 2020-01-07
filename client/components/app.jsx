@@ -1,5 +1,6 @@
 import React from 'react';
 import GradeTable from './grade-table';
+import GradeForm from './grade-form';
 
 class App extends React.Component {
   constructor(props) {
@@ -7,18 +8,43 @@ class App extends React.Component {
     this.state = {
       grades: []
     };
+    this.addInputs = this.addInputs.bind(this);
   }
 
   Header(props) {
     return (
-      <div className='ml-5 mt-4 w-75 row d-flex justify-content-between'>
-        <div className='sgt-title'>{props.titleText}</div>
-        <div className='d-flex align-items-center'>
-          <div className='mr-3 average-label'>Average Grade</div>
-          <div className='border border-dark bg-secondary average-grade d-flex justify-content-center'>{props.averageGrade}</div>
+      <div className='col-12 d-flex justify-content-center flex-wrap'>
+        <div className='col-8 sgt-title'>{props.titleText}</div>
+        <div className='col-4 d-flex align-items-center justify-content-center'>
+          <div className='average-label col-8'>Average Grade</div>
+          <div className='col-4 border border-dark bg-secondary average-grade d-flex justify-content-center'>{props.averageGrade}</div>
         </div>
       </div>
     );
+  }
+
+  addInputs(newGrade) {
+    fetch('/api/grades/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newGrade)
+    })
+      .then(response => response.json())
+      .then(jsonData => {
+        this.setState(previousState => {
+          var newGrades = previousState.grades;
+          newGrades.push(jsonData);
+          return {
+            grades: newGrades,
+            name: '',
+            course: '',
+            grade: ''
+          };
+        });
+      })
+      .catch(error => {
+        console.error(error.message);
+      });
   }
 
   componentDidMount() {
@@ -43,14 +69,17 @@ class App extends React.Component {
     for (var index = 0; index < theLength; index++) {
       sum += this.state.grades[index].grade;
     }
-    return sum / theLength;
+    return Math.round(sum / theLength * 10) / 10;
   }
 
   render() {
     return (
       <>
         <this.Header titleText='Student Grade Table' averageGrade={this.getAverageGrade()}/>
-        <GradeTable grades={this.state.grades}/>
+        <div className='d-flex flex-wrap'>
+          <GradeTable grades={this.state.grades} />
+          <GradeForm onSubmit={this.addInputs} />
+        </div>
       </>
     );
   }
