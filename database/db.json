@@ -17,6 +17,12 @@
       "name": "Douglas Crockford",
       "course": "JavaScript",
       "grade": 100
+    },
+    {
+      "id": 4,
+      "name": "Dummy Data",
+      "course": "JavaScript",
+      "grade": 0
     }
   ]
 }

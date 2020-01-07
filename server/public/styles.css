@@ -1,4 +1,15 @@
 .sgt-title {
+  font-size: 40px;
+  font-weight: bold;
+}
+.average-label {
   font-size: 25px;
   font-weight: bold;
+}
+.average-grade {
+  height: 40px;
+  width: 60px;
+  font-size: 25px;
+  font-weight: bold;
+  color: white;
 }
