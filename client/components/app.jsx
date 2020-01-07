@@ -6,14 +6,9 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      grades: [],
-      name: '',
-      course: '',
-      grade: ''
+      grades: []
     };
-    this.handleInputChange = this.handleInputChange.bind(this);
     this.addInputs = this.addInputs.bind(this);
-    this.handleCancelButtonClick = this.handleCancelButtonClick.bind(this);
   }
 
   Header(props) {
@@ -26,10 +21,6 @@ class App extends React.Component {
         </div>
       </div>
     );
-  }
-
-  handleInputChange(changedInput) {
-    this.setState(changedInput);
   }
 
   addInputs(newGrade) {
@@ -54,10 +45,6 @@ class App extends React.Component {
       .catch(error => {
         console.error(error.message);
       });
-  }
-
-  handleCancelButtonClick(clearInputObject) {
-    this.setState(clearInputObject);
   }
 
   componentDidMount() {
@@ -89,16 +76,9 @@ class App extends React.Component {
     return (
       <>
         <this.Header titleText='Student Grade Table' averageGrade={this.getAverageGrade()}/>
-        <div className='d-flex'>
-          <GradeTable grades={this.state.grades}/>
-          <GradeForm
-            onSubmit={this.addInputs}
-            handleInputChange={this.handleInputChange}
-            handleCancelButtonClick={this.handleCancelButtonClick}
-            nameValue={this.state.name}
-            courseValue={this.state.course}
-            gradeValue={this.state.grade}
-          />
+        <div className='d-flex flex-wrap'>
+          <GradeTable grades={this.state.grades} />
+          <GradeForm onSubmit={this.addInputs} />
         </div>
       </>
     );
