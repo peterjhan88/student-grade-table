@@ -36,18 +36,18 @@ class GradeForm extends React.Component {
 
   render() {
     return (
-      <form className='border border-dark d-flex flex-column wrap col-4 mt-4 ml-5' onSubmit={this.handleSubmit}>
+      <form className='border border-dark d-flex flex-column wrap col-3 mt-4 ml-2 align-items-center justify-content-center form-height' onSubmit={this.handleSubmit}>
         <div className='form-group row'>
-          <label className='col-3'>Name</label>
-          <input type='text' id='name' onChange={this.handleChange} value={this.props.nameValue} />
+          <label className='col-3 col-form-label-sm'><i className='fas fa-user'></i></label>
+          <input className='form-control-sm w-75' type='text' id='name' onChange={this.handleChange} value={this.props.nameValue} placeholder='Name' />
         </div>
         <div className='form-group row'>
-          <label className='col-3'>Course</label>
-          <input type='text' id='course' onChange={this.handleChange} value={this.props.courseValue} />
+          <label className='col-3 col-form-label-sm'><i className='fas fa-book-open'></i></label>
+          <input className='form-control-sm w-75' type='text' id='course' onChange={this.handleChange} value={this.props.courseValue} placeholder='Course' />
         </div>
         <div className='form-group row'>
-          <label className='col-3'>Grade</label>
-          <input type='text' id='grade' onChange={this.handleChange} value={this.props.gradeValue} />
+          <label className='col-3 col-form-label-sm'><i className='fas fa-graduation-cap'></i></label>
+          <input className='form-control-sm w-75' type='text' id='grade' onChange={this.handleChange} value={this.props.gradeValue} placeholder='Grade' />
         </div>
         <div>
           <button id='add' type='submit' className='btn btn-success'>Add</button>
