@@ -15,3 +15,15 @@
 .form-height {
   height: 270px;
 }
+.table-col-name {
+  width: 35%;
+}
+.table-col-course {
+  width: 20%;
+}
+.table-col-grade {
+  width: 10%;
+}
+.table-col-operation {
+  width: 35%;
+}

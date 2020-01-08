@@ -1,0 +1,28 @@
+show original server
+show index.js(mine)
+http GET :3000/api/grades/
+http GET :3000/api/grades/1
+http GET :3000/api/grades/hi-server
+http GET :3000/api/grades/-1
+http GET :3000/api/grades/291
+
+http POST :3000/api/grades/ name="Hello" course="server" grade:=77
+http POST :3000/api/grades/ name="Hi" course="Server" grade:=97
+http POST :3000/api/grades/ name="Missing Fields"
+
+http DELETE :3000/api/grades/5
+http DELETE :3000/api/grades/aidfjlaewsjd
+http DELETE :3000/api/grades/555
+http DELETE :3000/api/grades/-5
+
+http PUT :3000/api/grades/4 name="Hello There" course="server" grade:=100
+http PUT :3000/api/grades/4 name="Hello There"
+http PUT :3000/api/grades/-4 name="Hello There" course="server" grade:=100
+http PUT :3000/api/grades/asdfea name="Hello There" course="server" grade:=100
+http PUT :3000/api/grades/4444 name="Hello There" course="server" grade:=100
+
+http PATCH :300/api/grades/4 course="Server-Test"
+http PATCH :300/api/grades/4
+http PATCH :300/api/grades/-4
+http PATCH :300/api/grades/444
+http PATCH :300/api/grades/not-a-real-id
