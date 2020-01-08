@@ -19,10 +19,10 @@ class GradeTable extends React.Component {
       <table className='mx-auto my-3 col-11 col-xl-8 table table-bordered table-dark table-striped'>
         <thead>
           <tr className='bg-info'>
-            <th scope='col'>Student Name</th>
-            <th scope='col'>Course</th>
-            <th scope='col'>Grade</th>
-            <th scope='col'>Operation</th>
+            <th className='table-col-name' scope='col'>Student Name</th>
+            <th className='table-col-course' scope='col'>Course</th>
+            <th className='table-col-grade' scope='col'>Grade</th>
+            <th className='table-col-operation' scope='col'>Operation</th>
           </tr>
         </thead>
         <tbody>
