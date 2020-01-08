@@ -4,20 +4,28 @@ class Grade extends React.Component {
   constructor(props) {
     super(props);
     this.handleDelete = this.handleDelete.bind(this);
+    this.handleUpdate = this.handleUpdate.bind(this);
   }
 
   handleDelete(event) {
     this.props.handleDeleteButtonClick(this.props.id);
   }
 
+  handleUpdate(event) {
+    this.props.handleUpdateButtonClick(this.props.id);
+  }
+
   render() {
     return (
       <tr>
-        <td className='col-3'>{this.props.name}</td>
-        <td className='col-2'>{this.props.course}</td>
-        <td className='col-2'>{this.props.grade}</td>
-        <td className='col-3'>
-          <div className='btn btn-danger' onClick={this.handleDelete}>DELETE</div>
+        <td>{this.props.name}</td>
+        <td>{this.props.course}</td>
+        <td>{this.props.grade}</td>
+        <td>
+          <div className="d-flex justify-content-around">
+            <div className='btn btn-danger' onClick={this.handleDelete}>DELETE</div>
+            <div className='btn btn-warning' onClick={this.handleUpdate}>Update</div>
+          </div>
         </td>
       </tr>
     );

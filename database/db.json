@@ -21,38 +21,20 @@
     {
       "name": "test",
       "course": "dummy",
-      "grade": 100,
+      "grade": 56,
       "id": 5
     },
     {
-      "name": "test4",
-      "course": "test4",
-      "grade": 2,
-      "id": 8
+      "name": "test1",
+      "course": "js",
+      "grade": 33,
+      "id": 6
     },
     {
-      "name": "test5",
-      "course": "test5",
-      "grade": 3,
-      "id": 10
-    },
-    {
-      "name": "test6",
-      "course": "test6",
-      "grade": 4,
-      "id": 11
-    },
-    {
-      "name": "test7",
-      "course": "test7",
-      "grade": 12,
-      "id": 12
-    },
-    {
-      "name": "Dummy Data",
-      "course": "Dummy",
+      "name": "test2",
+      "course": "react",
       "grade": 77,
-      "id": 13
+      "id": 7
     }
   ]
 }

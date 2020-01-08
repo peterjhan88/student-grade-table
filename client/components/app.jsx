@@ -6,10 +6,13 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      grades: []
+      grades: [],
+      updateTarget: null
     };
-    this.addInputs = this.addInputs.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
     this.deleteGrade = this.deleteGrade.bind(this);
+    this.handleUpdateButtonClick = this.handleUpdateButtonClick.bind(this);
+    this.handleCancelButtonClick = this.handleCancelButtonClick.bind(this);
   }
 
   Header(props) {
@@ -24,7 +27,16 @@ class App extends React.Component {
     );
   }
 
-  addInputs(newGrade) {
+  handleSubmit(newGrade) {
+    const isModeAdd = this.state.updateTarget === null;
+    if (isModeAdd) {
+      this.addGrade(newGrade);
+    } else {
+      this.updateGrade(newGrade);
+    }
+  }
+
+  addGrade(newGrade) {
     fetch('/api/grades/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -35,7 +47,36 @@ class App extends React.Component {
         this.setState(previousState => {
           var newGrades = previousState.grades;
           newGrades.push(jsonData);
-          return { grades: newGrades };
+          return {
+            grades: newGrades
+          };
+        });
+      })
+      .catch(error => {
+        console.error(error.message);
+      });
+  }
+
+  updateGrade(updatedGradeFromForm) {
+    const { targetId } = updatedGradeFromForm;
+    const body = {
+      name: updatedGradeFromForm.name,
+      course: updatedGradeFromForm.course,
+      grade: updatedGradeFromForm.grade
+    };
+    fetch(`/api/grades/${targetId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    })
+      .then(response => response.json())
+      .then(updatedGrade => {
+        this.setState(previousState => {
+          var newGrades = previousState.grades.map(grade => grade.id === updatedGrade.id ? updatedGrade : grade);
+          return {
+            grades: newGrades,
+            updateTarget: null
+          };
         });
       })
       .catch(error => {
@@ -56,12 +97,24 @@ class App extends React.Component {
               newGrades.splice(index, 1);
             }
           }
-          return { grades: newGrades };
+          return {
+            grades: newGrades,
+            updateTarget: null
+          };
         });
       })
       .catch(error => {
         console.error(error.message);
       });
+  }
+
+  handleCancelButtonClick() {
+    this.setState({ updateTarget: null });
+  }
+
+  handleUpdateButtonClick(targetId) {
+    const [updateTarget] = this.state.grades.filter(grade => grade.id === targetId);
+    this.setState({ updateTarget: updateTarget });
   }
 
   componentDidMount() {
@@ -94,8 +147,17 @@ class App extends React.Component {
       <>
         <this.Header titleText='Student Grade Table' averageGrade={this.getAverageGrade()}/>
         <div className='d-flex flex-wrap'>
-          <GradeTable grades={this.state.grades} handleDeleteButtonClick={this.deleteGrade}/>
-          <GradeForm onSubmit={this.addInputs} />
+          <GradeTable
+            grades={this.state.grades}
+            handleDeleteButtonClick={this.deleteGrade}
+            handleUpdateButtonClick={this.handleUpdateButtonClick}
+          />
+          <GradeForm
+            onSubmit={this.handleSubmit}
+            mode={this.state.updateTarget ? 'Update' : 'Add'}
+            updateTarget={this.state.updateTarget}
+            handleCancelButtonClick={this.handleCancelButtonClick}
+          />
         </div>
       </>
     );

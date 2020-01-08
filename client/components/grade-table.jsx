@@ -12,16 +12,17 @@ class GradeTable extends React.Component {
           course={student.course}
           grade={student.grade}
           handleDeleteButtonClick={this.props.handleDeleteButtonClick}
+          handleUpdateButtonClick={this.props.handleUpdateButtonClick}
         />);
     });
     return (
       <table className='mx-auto my-3 col-11 col-xl-8 table table-bordered table-dark table-striped'>
-        <thead className='bg-info'>
-          <tr>
-            <th className='col-3'>Student Name</th>
-            <th className='col-2'>Course</th>
-            <th className='col-2'>Grade</th>
-            <th className='col-3'>Operation</th>
+        <thead>
+          <tr className='bg-info'>
+            <th scope='col'>Student Name</th>
+            <th scope='col'>Course</th>
+            <th scope='col'>Grade</th>
+            <th scope='col'>Operation</th>
           </tr>
         </thead>
         <tbody>
