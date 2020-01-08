@@ -1,0 +1,29 @@
+{
+  "nextId": 6,
+  "grades": [
+    {
+      "name": "Peter",
+      "course": "Making Mistake",
+      "grade": 100,
+      "id": 1
+    },
+    {
+      "name": "Yun",
+      "course": "Trying New Stuff",
+      "grade": 100,
+      "id": 2
+    },
+    {
+      "name": "Dummy",
+      "course": "Data",
+      "grade": 50,
+      "id": 3
+    },
+    {
+      "name": "Mango",
+      "id": 5,
+      "course": "Juice",
+      "grade": 14
+    }
+  ]
+}
