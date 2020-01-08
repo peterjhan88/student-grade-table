@@ -9,7 +9,7 @@ class App extends React.Component {
       grades: [],
       updateTarget: null
     };
-    this.addInputs = this.addInputs.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
     this.deleteGrade = this.deleteGrade.bind(this);
     this.handleUpdateButtonClick = this.handleUpdateButtonClick.bind(this);
     this.handleCancelButtonClick = this.handleCancelButtonClick.bind(this);
@@ -27,53 +27,61 @@ class App extends React.Component {
     );
   }
 
-  addInputs(newGrade) {
+  handleSubmit(newGrade) {
     const isModeAdd = this.state.updateTarget === null;
     if (isModeAdd) {
-      fetch('/api/grades/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newGrade)
-      })
-        .then(response => response.json())
-        .then(jsonData => {
-          this.setState(previousState => {
-            var newGrades = previousState.grades;
-            newGrades.push(jsonData);
-            return {
-              grades: newGrades
-            };
-          });
-        })
-        .catch(error => {
-          console.error(error.message);
-        });
+      this.addGrade(newGrade);
     } else {
-      const { targetId } = newGrade;
-      const body = {
-        name: newGrade.name,
-        course: newGrade.course,
-        grade: newGrade.grade
-      };
-      fetch(`/api/grades/${targetId}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body)
-      })
-        .then(response => response.json())
-        .then(updatedGrade => {
-          this.setState(previousState => {
-            var newGrades = previousState.grades.map(grade => grade.id === updatedGrade.id ? updatedGrade : grade);
-            return {
-              grades: newGrades,
-              updateTarget: null
-            };
-          });
-        })
-        .catch(error => {
-          console.error(error.message);
-        });
+      this.updateGrade(newGrade);
     }
+  }
+
+  addGrade(newGrade) {
+    fetch('/api/grades/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newGrade)
+    })
+      .then(response => response.json())
+      .then(jsonData => {
+        this.setState(previousState => {
+          var newGrades = previousState.grades;
+          newGrades.push(jsonData);
+          return {
+            grades: newGrades
+          };
+        });
+      })
+      .catch(error => {
+        console.error(error.message);
+      });
+  }
+
+  updateGrade(updatedGradeFromForm) {
+    const { targetId } = updatedGradeFromForm;
+    const body = {
+      name: updatedGradeFromForm.name,
+      course: updatedGradeFromForm.course,
+      grade: updatedGradeFromForm.grade
+    };
+    fetch(`/api/grades/${targetId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    })
+      .then(response => response.json())
+      .then(updatedGrade => {
+        this.setState(previousState => {
+          var newGrades = previousState.grades.map(grade => grade.id === updatedGrade.id ? updatedGrade : grade);
+          return {
+            grades: newGrades,
+            updateTarget: null
+          };
+        });
+      })
+      .catch(error => {
+        console.error(error.message);
+      });
   }
 
   deleteGrade(targetId) {
@@ -145,7 +153,7 @@ class App extends React.Component {
             handleUpdateButtonClick={this.handleUpdateButtonClick}
           />
           <GradeForm
-            onSubmit={this.addInputs}
+            onSubmit={this.handleSubmit}
             mode={this.state.updateTarget ? 'Update' : 'Add'}
             updateTarget={this.state.updateTarget}
             handleCancelButtonClick={this.handleCancelButtonClick}

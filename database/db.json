@@ -21,38 +21,20 @@
     {
       "name": "test",
       "course": "dummy",
-      "grade": 100,
+      "grade": 56,
       "id": 5
     },
     {
-      "name": "test7",
-      "course": "test7",
-      "grade": 66,
-      "id": 12
-    },
-    {
-      "name": "Dummy Data",
-      "course": "Dummy",
-      "grade": 77,
-      "id": 13
-    },
-    {
-      "name": "test8",
-      "course": "test8",
-      "grade": 99,
-      "id": 14
-    },
-    {
-      "name": "ttest",
-      "course": "ttest",
-      "grade": 70,
-      "id": 15
-    },
-    {
-      "name": "add_with_update_test",
+      "name": "test1",
       "course": "js",
-      "grade": 99,
-      "id": 16
+      "grade": 33,
+      "id": 6
+    },
+    {
+      "name": "test2",
+      "course": "react",
+      "grade": 77,
+      "id": 7
     }
   ]
 }
