@@ -25,27 +25,9 @@
       "id": 5
     },
     {
-      "name": "test4",
-      "course": "test4",
-      "grade": 2,
-      "id": 8
-    },
-    {
-      "name": "test5",
-      "course": "test5",
-      "grade": 3,
-      "id": 10
-    },
-    {
-      "name": "test6",
-      "course": "test6",
-      "grade": 4,
-      "id": 11
-    },
-    {
       "name": "test7",
       "course": "test7",
-      "grade": 12,
+      "grade": 66,
       "id": 12
     },
     {
@@ -53,6 +35,24 @@
       "course": "Dummy",
       "grade": 77,
       "id": 13
+    },
+    {
+      "name": "test8",
+      "course": "test8",
+      "grade": 99,
+      "id": 14
+    },
+    {
+      "name": "ttest",
+      "course": "ttest",
+      "grade": 70,
+      "id": 15
+    },
+    {
+      "name": "add_with_update_test",
+      "course": "js",
+      "grade": 99,
+      "id": 16
     }
   ]
 }
