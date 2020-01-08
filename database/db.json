@@ -17,24 +17,6 @@
       "name": "Douglas Crockford",
       "course": "JavaScript",
       "grade": 100
-    },
-    {
-      "name": "test",
-      "course": "dummy",
-      "grade": 56,
-      "id": 5
-    },
-    {
-      "name": "test1",
-      "course": "js",
-      "grade": 33,
-      "id": 6
-    },
-    {
-      "name": "test2",
-      "course": "react",
-      "grade": 77,
-      "id": 7
     }
   ]
 }
