@@ -127,7 +127,7 @@ app.put('/api/grades/:id', (req, res) => {
       };
       res.status(400).send(errorObject);
       return false;
-    } else if (!gradeWithTargetId(dataOnServer.grades, targetId)) {
+    } else if (!gradeWithTargetId(targetId)) {
       const errorObject = {
         error: 'id does not exist in data'
       };
@@ -177,7 +177,7 @@ app.patch('/api/grades/:id', (req, res) => {
       };
       res.status(400).send(errorObject);
       return false;
-    } else if (!gradeWithTargetId(dataOnServer.grades, targetId)) {
+    } else if (!gradeWithTargetId(targetId)) {
       const errorObject = {
         error: 'id does not exist in data'
       };
