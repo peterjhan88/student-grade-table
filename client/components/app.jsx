@@ -88,8 +88,7 @@ class App extends React.Component {
     fetch(`/api/grades/${targetId}`, {
       method: 'DELETE'
     })
-      .then(response => response.json())
-      .then(jsonData => {
+      .then(response => {
         this.setState(previousState => {
           var newGrades = previousState.grades;
           for (var index = 0; index < newGrades.length; index++) {
