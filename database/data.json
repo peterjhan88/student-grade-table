@@ -1,5 +1,5 @@
 {
-  "nextId": 7,
+  "nextId": 10,
   "grades": [
     {
       "name": "Peter",
@@ -14,16 +14,34 @@
       "id": 2
     },
     {
-      "name": "Dummy",
-      "course": "Data",
-      "grade": 50,
-      "id": 3
+      "name": "Dummy Data",
+      "course": "Test",
+      "id": 3,
+      "grade": 77
     },
     {
-      "name": "Pineapple",
-      "grade": 99,
-      "id": 6,
-      "course": "Smoothe"
+      "name": "Peach",
+      "course": "Tea",
+      "grade": 100,
+      "id": 6
+    },
+    {
+      "id": 7,
+      "name": "Kyle Simpson",
+      "course": "JavaScript",
+      "grade": 100
+    },
+    {
+      "id": 8,
+      "name": "Brendan Eich",
+      "course": "JavaScript",
+      "grade": 100
+    },
+    {
+      "id": 9,
+      "name": "Douglas Crockford",
+      "course": "JavaScript",
+      "grade": 100
     }
   ]
 }

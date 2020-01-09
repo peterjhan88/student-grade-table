@@ -1,7 +1,9 @@
 /* eslint-disable no-console */
-const dataPath = '../database/data.json';
 const express = require('express');
+const path = require('path');
 const fs = require('fs');
+const portNumber = 3001;
+const dataPath = path.resolve(__dirname, '../database/data.json');
 const app = express();
 const jsonParserMiddleWare = express.json();
 var dataOnServer = require(dataPath);
@@ -138,8 +140,8 @@ app.patch('/api/grades/:id', (req, res) => {
   }
 });
 
-app.listen(3000, () => {
-  console.log('Server initiated. Listening on port 3000...');
+app.listen(portNumber, () => {
+  console.log(`Server initiated. Listening on port ${portNumber}...\n`);
 });
 
 function isIdValid(id) {
