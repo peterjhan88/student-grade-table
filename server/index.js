@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const dataPath = '../database/data.json';
 const express = require('express');
 const fs = require('fs');
@@ -9,28 +10,16 @@ var serverDate = new Date();
 app.get('/api/grades', (req, res) => {
   const data = dataOnServer.grades;
   res.status(200).send(data);
-  // eslint-disable-next-line no-console
   console.log(req.method, 'All Grades', serverDate.toLocaleTimeString());
 });
 
 app.get('/api/grades/:id', (req, res) => {
   const targetId = req.params.id;
-  if (!isIdValid(targetId)) {
-    const errorObject = {
-      error: 'id must be positive integer'
-    };
-    res.status(400).send(errorObject);
-    return false;
-  } else if (!gradeWithTargetId(targetId)) {
-    const errorObject = {
-      error: 'id does not exist in data'
-    };
-    res.status(404).send(errorObject);
+  if (invalidIdHandle(targetId, res)) {
     return false;
   }
   const grade = dataOnServer.grades.find(grade => grade.id === parseInt(targetId));
   res.status(200).send(grade);
-  // eslint-disable-next-line no-console
   console.log(req.method, `id=${req.params.id}`, serverDate.toLocaleTimeString());
 });
 
@@ -38,9 +27,7 @@ app.use(jsonParserMiddleWare);
 app.post('/api/grades', (req, res) => {
   var newGrade = req.body;
   if (!checkBody(newGrade)) {
-    const errorObject = {
-      error: 'Bad Request - Missing input field'
-    };
+    const errorObject = validateGrade(newGrade);
     res.status(400).send(errorObject);
     return false;
   } else {
@@ -56,7 +43,6 @@ app.post('/api/grades', (req, res) => {
         return false;
       }
       res.status(201).send(newGrade);
-      // eslint-disable-next-line no-console
       console.log(req.method, serverDate.toLocaleTimeString());
       return true;
     });
@@ -78,22 +64,11 @@ app.delete('/api/grades/:id', (req, res) => {
         return false;
       }
       res.sendStatus(204);
-      // eslint-disable-next-line no-console
       console.log(req.method, serverDate.toLocaleTimeString());
       return true;
     });
   } else {
-    if (!isIdValid(targetId)) {
-      const errorObject = {
-        error: 'id must be positive integer'
-      };
-      res.status(400).send(errorObject);
-      return false;
-    } else if (!gradeWithTargetId(targetId)) {
-      const errorObject = {
-        error: 'id does not exist in data'
-      };
-      res.status(404).send(errorObject);
+    if (invalidIdHandle(targetId, res)) {
       return false;
     }
   }
@@ -116,27 +91,14 @@ app.put('/api/grades/:id', (req, res) => {
         return false;
       }
       res.status(200).send(reqBody);
-      // eslint-disable-next-line no-console
       console.log(req.method, serverDate.toLocaleTimeString());
       return true;
     });
   } else {
-    if (!isIdValid(targetId)) {
-      const errorObject = {
-        error: 'id must be positive integer'
-      };
-      res.status(400).send(errorObject);
-      return false;
-    } else if (!gradeWithTargetId(targetId)) {
-      const errorObject = {
-        error: 'id does not exist in data'
-      };
-      res.status(404).send(errorObject);
+    if (invalidIdHandle(targetId, res)) {
       return false;
     } else {
-      const errorObject = {
-        error: 'PUT method require all fields'
-      };
+      const errorObject = validateGrade(reqBody);
       res.status(400).send(errorObject);
       return false;
     }
@@ -166,36 +128,18 @@ app.patch('/api/grades/:id', (req, res) => {
         return false;
       }
       res.status(200).send(reqBody);
-      // eslint-disable-next-line no-console
       console.log(req.method, serverDate.toLocaleTimeString());
       return true;
     });
   } else {
-    if (!isIdValid(targetId)) {
-      const errorObject = {
-        error: 'id must be positive integer'
-      };
-      res.status(400).send(errorObject);
-      return false;
-    } else if (!gradeWithTargetId(targetId)) {
-      const errorObject = {
-        error: 'id does not exist in data'
-      };
-      res.status(404).send(errorObject);
-      return false;
-    } else if (!checkBody(reqBody)) {
-      const errorObject = {
-        error: 'PATCH method require at least one field'
-      };
-      res.status(400).send(errorObject);
+    if (invalidIdHandle(targetId, res)) {
       return false;
     }
   }
 });
 
 app.listen(3000, () => {
-// eslint-disable-next-line no-console
-  console.log('Server initiated. Listening on port 3000..');
+  console.log('Server initiated. Listening on port 3000...');
 });
 
 function isIdValid(id) {
@@ -214,4 +158,34 @@ function checkBody(newGrade) {
     return false;
   }
   return true;
+}
+
+function validateGrade(gradeData) {
+  const errors = {};
+  const requiredFields = ['name', 'course', 'grade'];
+  requiredFields.forEach(field => {
+    if (!gradeData[field]) {
+      errors[field] = `${field} is a required field`;
+    }
+  });
+  if (Object.keys(errors).length > 0) {
+    return errors;
+  }
+  return null;
+}
+
+function invalidIdHandle(id, res) {
+  if (!isIdValid(id)) {
+    const errorObject = {
+      error: 'id must be positive integer'
+    };
+    res.status(400).send(errorObject);
+    return true;
+  } else if (!gradeWithTargetId(id)) {
+    const errorObject = {
+      error: 'id does not exist in data'
+    };
+    res.status(404).send(errorObject);
+    return true;
+  }
 }
