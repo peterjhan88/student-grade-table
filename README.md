@@ -8,7 +8,7 @@ A full-stack application for teachers to manage student grades
 - Webpack 4
 - Bootstrap 4
 - Node.js
-- PostgresSQL
+- PostgreSQL
 - HTML5
 - CSS3
 - AWS EC2
