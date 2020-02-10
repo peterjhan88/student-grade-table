@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 require('dotenv/config');
 const express = require('express');
 
@@ -45,5 +44,6 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(process.env.PORT, () => {
+  // eslint-disable-next-line no-console
   console.log(`Server initiated. Listening on port ${process.env.PORT}...\n`);
 });
