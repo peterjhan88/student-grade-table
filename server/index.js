@@ -20,6 +20,15 @@ app.get('/api/health-check', (req, res, next) => {
     .catch(err => next(err));
 });
 
+app.get('/api/grades', (req, res, next) => {
+  const gradesSql = `
+    select * from grades
+  `;
+  db.query(gradesSql)
+    .then(result => res.json(result.rows))
+    .catch(err => next(err));
+});
+
 app.use('/api', (req, res, next) => {
   next(new ClientError(`cannot ${req.method} ${req.originalUrl}`, 404));
 });
