@@ -72,7 +72,7 @@ class App extends React.Component {
       .then(response => response.json())
       .then(updatedGrade => {
         this.setState(previousState => {
-          var newGrades = previousState.grades.map(grade => grade.id === updatedGrade.id ? updatedGrade : grade);
+          var newGrades = previousState.grades.map(grade => grade.gradeId === updatedGrade.gradeId ? updatedGrade : grade);
           return {
             grades: newGrades,
             updateTarget: null
@@ -112,7 +112,7 @@ class App extends React.Component {
   }
 
   handleUpdateButtonClick(targetId) {
-    const [updateTarget] = this.state.grades.filter(grade => grade.id === targetId);
+    const [updateTarget] = this.state.grades.filter(grade => grade.gradeId === targetId);
     this.setState({ updateTarget: updateTarget });
   }
 
