@@ -16,6 +16,11 @@ class GradeForm extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
+    if (!this.state.name || !this.state.course || !this.state.grade) {
+      // eslint-disable-next-line no-console
+      console.log('All input fields must be filled');
+      return;
+    }
     var newGrade = {
       name: this.state.name,
       course: this.state.course,
