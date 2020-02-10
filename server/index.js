@@ -29,12 +29,11 @@ app.get('/api/grades', (req, res, next) => {
 });
 
 app.post('/api/grades', (req, res, next) => {
-  const receivedBody = req.body;
-  const missing = missingFields(receivedBody);
+  const missing = missingFields(req);
   if (missing) {
     throw new ClientError(`Missing ${missing.join(', ')} field(s)`, 400);
   }
-  let receivedGrade = receivedBody.grade;
+  let receivedGrade = req.body.grade;
   if (isNaN(parseInt(receivedGrade, 10)) || parseInt(receivedGrade, 10) < 0) {
     throw new ClientError(`${receivedGrade} is not non-negative number`, 400);
   }
@@ -57,15 +56,33 @@ app.post('/api/grades', (req, res, next) => {
 });
 
 app.put('/api/grades', (req, res, next) => {
-  // eslint-disable-next-line no-console
-  console.log('this is put(update) endpoint');
-  res.json('this is update(put) endpoint');
-});
-
-app.patch('/api/grades', (req, res, next) => {
-  // eslint-disable-next-line no-console
-  console.log('this is patch endpoint');
-  res.json('this is patch endpoint');
+  const missing = missingFields(req);
+  if (missing) {
+    throw new ClientError(`Missing ${missing.join(', ')} field(s)`, 400);
+  }
+  let receivedGrade = req.body.grade;
+  if (isNaN(parseInt(receivedGrade, 10)) || parseInt(receivedGrade, 10) < 0) {
+    throw new ClientError(`${receivedGrade} is not non-negative number`, 400);
+  }
+  receivedGrade = parseInt(receivedGrade, 10);
+  const gradesSql = `
+    update grades
+    set name=$2,
+        course=$3,
+        grade=$4
+    where "gradeId"=$1
+    returning *
+  `;
+  const fields = ['gradeId', 'name', 'course'];
+  const values = [];
+  for (let index = 0; index < fields.length; index++) {
+    const key = fields[index];
+    values.push(req.body[key]);
+  }
+  values.push(receivedGrade);
+  db.query(gradesSql, values)
+    .then(result => res.json(result.rows[0]))
+    .catch(err => next(err));
 });
 
 app.use('/api', (req, res, next) => {
@@ -88,8 +105,12 @@ app.listen(process.env.PORT, () => {
   console.log(`Server initiated. Listening on port ${process.env.PORT}...\n`);
 });
 
-function missingFields(reqBody) {
+function missingFields(req) {
   const fields = ['name', 'course', 'grade'];
+  if (req.method.match(/put/i)) {
+    fields.push('gradeId');
+  }
+  const reqBody = req.body;
   const missing = [];
   for (var index = 0; index < fields.length; index++) {
     const key = fields[index];

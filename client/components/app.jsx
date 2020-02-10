@@ -62,10 +62,11 @@ class App extends React.Component {
     const body = {
       name: updatedGradeFromForm.name,
       course: updatedGradeFromForm.course,
-      grade: updatedGradeFromForm.grade
+      grade: updatedGradeFromForm.grade,
+      gradeId: targetId
     };
-    fetch(`/api/grades/${targetId}`, {
-      method: 'PATCH',
+    fetch('/api/grades/', {
+      method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body)
     })

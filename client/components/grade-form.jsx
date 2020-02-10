@@ -36,7 +36,7 @@ class GradeForm extends React.Component {
       grade: parseInt(this.state.grade)
     };
     if (this.state.mode === 'Update') {
-      newGrade.targetId = this.props.updateTarget.id;
+      newGrade.targetId = this.props.updateTarget.gradeId;
     }
     this.props.onSubmit(newGrade);
     this.inputClear();
