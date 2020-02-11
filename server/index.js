@@ -82,7 +82,7 @@ app.put('/api/grades', (req, res, next) => {
     throw new ClientError(`Missing ${missing.join(', ')} field(s)`, 400);
   }
   const gradeId = req.body.gradeId;
-  if (gradeId.match(/\D/g) || isNaN(parseInt(gradeId, 10)) || parseInt(gradeId, 10) <= 0) {
+  if (isNaN(parseInt(gradeId, 10)) || parseInt(gradeId, 10) <= 0) {
     throw new ClientError(`${gradeId} is not positive integer`, 400);
   }
   let receivedGrade = req.body.grade;
