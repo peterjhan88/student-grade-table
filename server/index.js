@@ -20,10 +20,10 @@ app.get('/api/health-check', (req, res, next) => {
 });
 
 app.get('/api/grades', (req, res, next) => {
-  const gradesSql = `
+  const getSql = `
     select * from grades
   `;
-  db.query(gradesSql)
+  db.query(getSql)
     .then(result => res.json(result.rows))
     .catch(err => next(err));
 });
@@ -38,7 +38,7 @@ app.post('/api/grades', (req, res, next) => {
     throw new ClientError(`${receivedGrade} is not non-negative number`, 400);
   }
   receivedGrade = parseInt(receivedGrade, 10);
-  const gradesSql = `
+  const insertSql = `
     insert into grades ("gradeId", name, course, grade, "createdAt")
     values (default, $1, $2, $3, default)
     returning *
@@ -50,8 +50,29 @@ app.post('/api/grades', (req, res, next) => {
     values.push(req.body[key]);
   }
   values.push(receivedGrade);
-  db.query(gradesSql, values)
+  db.query(insertSql, values)
     .then(result => res.json(result.rows[0]))
+    .catch(err => next(err));
+});
+
+app.delete('/api/grades/:gradeId', (req, res, next) => {
+  const gradeId = req.params.gradeId;
+  if (gradeId.match(/\D/g) || isNaN(parseInt(gradeId, 10)) || parseInt(gradeId, 10) <= 0) {
+    throw new ClientError(`${gradeId} is not positive integer`, 400);
+  }
+  const deleteSql = `
+    delete from grades
+    where "gradeId"=$1
+    returning *
+  `;
+  db.query(deleteSql, [gradeId])
+    .then(result => {
+      if (!result.rows[0]) {
+        throw new ClientError(`${gradeId} does not exist`, 404);
+      } else {
+        res.json(result.rows[0]);
+      }
+    })
     .catch(err => next(err));
 });
 
@@ -60,8 +81,12 @@ app.put('/api/grades', (req, res, next) => {
   if (missing) {
     throw new ClientError(`Missing ${missing.join(', ')} field(s)`, 400);
   }
+  const gradeId = req.body.gradeId;
+  if (gradeId.match(/\D/g) || isNaN(parseInt(gradeId, 10)) || parseInt(gradeId, 10) <= 0) {
+    throw new ClientError(`${gradeId} is not positive integer`, 400);
+  }
   let receivedGrade = req.body.grade;
-  if (isNaN(parseInt(receivedGrade, 10)) || parseInt(receivedGrade, 10) < 0) {
+  if (gradeId.match(/\D/g) || isNaN(parseInt(receivedGrade, 10)) || parseInt(receivedGrade, 10) < 0) {
     throw new ClientError(`${receivedGrade} is not non-negative number`, 400);
   }
   receivedGrade = parseInt(receivedGrade, 10);

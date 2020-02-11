@@ -93,7 +93,7 @@ class App extends React.Component {
         this.setState(previousState => {
           var newGrades = previousState.grades;
           for (var index = 0; index < newGrades.length; index++) {
-            if (newGrades[index].id === parseInt(targetId)) {
+            if (newGrades[index].gradeId === parseInt(targetId)) {
               newGrades.splice(index, 1);
             }
           }
