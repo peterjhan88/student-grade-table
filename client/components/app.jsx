@@ -62,17 +62,18 @@ class App extends React.Component {
     const body = {
       name: updatedGradeFromForm.name,
       course: updatedGradeFromForm.course,
-      grade: updatedGradeFromForm.grade
+      grade: updatedGradeFromForm.grade,
+      gradeId: targetId
     };
-    fetch(`/api/grades/${targetId}`, {
-      method: 'PATCH',
+    fetch('/api/grades/', {
+      method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body)
     })
       .then(response => response.json())
       .then(updatedGrade => {
         this.setState(previousState => {
-          var newGrades = previousState.grades.map(grade => grade.id === updatedGrade.id ? updatedGrade : grade);
+          var newGrades = previousState.grades.map(grade => grade.gradeId === updatedGrade.gradeId ? updatedGrade : grade);
           return {
             grades: newGrades,
             updateTarget: null
@@ -92,7 +93,7 @@ class App extends React.Component {
         this.setState(previousState => {
           var newGrades = previousState.grades;
           for (var index = 0; index < newGrades.length; index++) {
-            if (newGrades[index].id === parseInt(targetId)) {
+            if (newGrades[index].gradeId === parseInt(targetId)) {
               newGrades.splice(index, 1);
             }
           }
@@ -112,7 +113,7 @@ class App extends React.Component {
   }
 
   handleUpdateButtonClick(targetId) {
-    const [updateTarget] = this.state.grades.filter(grade => grade.id === targetId);
+    const [updateTarget] = this.state.grades.filter(grade => grade.gradeId === targetId);
     this.setState({ updateTarget: updateTarget });
   }
 

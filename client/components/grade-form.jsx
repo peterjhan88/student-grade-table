@@ -7,7 +7,10 @@ class GradeForm extends React.Component {
       mode: 'Add',
       name: '',
       course: '',
-      grade: ''
+      grade: '',
+      nameError: false,
+      courseError: false,
+      gradeError: false
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -16,9 +19,15 @@ class GradeForm extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    if (!this.state.name || !this.state.course || !this.state.grade) {
+    const missingFields = this.missingFields(this.state);
+    if (missingFields) {
       // eslint-disable-next-line no-console
-      console.log('All input fields must be filled');
+      console.log(`Missing ${missingFields.join(', ')}`);
+      return;
+    }
+    if (this.state.grade.match(/\D/gi)) {
+      // eslint-disable-next-line no-console
+      console.log('Grade must be positive integer!');
       return;
     }
     var newGrade = {
@@ -27,7 +36,7 @@ class GradeForm extends React.Component {
       grade: parseInt(this.state.grade)
     };
     if (this.state.mode === 'Update') {
-      newGrade.targetId = this.props.updateTarget.id;
+      newGrade.targetId = this.props.updateTarget.gradeId;
     }
     this.props.onSubmit(newGrade);
     this.inputClear();
@@ -64,6 +73,18 @@ class GradeForm extends React.Component {
     event.preventDefault();
     this.props.handleCancelButtonClick();
     this.inputClear();
+  }
+
+  missingFields(inputs) {
+    const requiredFields = ['name', 'course', 'grade'];
+    const missing = [];
+    for (var index = 0; index < requiredFields.length; index++) {
+      const key = requiredFields[index];
+      if (!inputs[key]) {
+        missing.push(key);
+      }
+    }
+    return missing.length === 0 ? null : missing;
   }
 
   render() {
