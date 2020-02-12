@@ -15,7 +15,7 @@ A full-stack application for teachers to manage student grades
 
 ## Live Demo
 
-You can see live demo here! [Student Grade Table in Action!] (https://sgt.peterjhan.com)
+You can see live demo here! [Student Grade Table in Action!](https://sgt.peterjhan.com)
 
 ## Features
 
