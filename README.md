@@ -51,10 +51,11 @@ gif should be here(something short)
     npm install
     ```
 
-1. Start PostgreSQL.
+1. Start PostgreSQL and import smaple data.
 
     ```shell
     sudo service postgresql start
+    npm run db:import
     ```
 
 1. Start the project. Once started you can view the application by opening http://localhost:3000 in your browser.
