@@ -106,9 +106,7 @@ COPY public.grades ("gradeId", name, course, grade, "createdAt") FROM stdin;
 15	In-N-Out	Double-Double	100	2020-01-10 13:19:32.854157-08
 17	Subway	Sandwich	89	2020-01-10 15:17:54.137737-08
 18	Peter Han	Back	99	2020-01-10 16:32:59.87881-08
-19	Teter Tim	Testing	88	2020-02-10 14:53:40.579609-08
-20	Teter Tim	Testing	12	2020-02-10 14:54:23.453769-08
-21	Teter Tim	Testing	3	2020-02-10 15:13:43.926856-08
+20	Teter Tim	Testing	78	2020-02-10 14:54:23.453769-08
 \.
 
 
@@ -116,7 +114,7 @@ COPY public.grades ("gradeId", name, course, grade, "createdAt") FROM stdin;
 -- Name: grades_gradeId_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public."grades_gradeId_seq"', 21, true);
+SELECT pg_catalog.setval('public."grades_gradeId_seq"', 24, true);
 
 
 --
