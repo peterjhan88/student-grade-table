@@ -6,8 +6,8 @@ class GradeTable extends React.Component {
     const allGrades = this.props.grades.map(student => {
       return (
         <Grade
-          key={student.id}
-          id={student.id}
+          key={student.gradeId}
+          id={student.gradeId}
           name={student.name}
           course={student.course}
           grade={student.grade}

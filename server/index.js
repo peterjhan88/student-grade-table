@@ -1,193 +1,147 @@
-/* eslint-disable no-console */
+require('dotenv/config');
 const express = require('express');
-const path = require('path');
-const fs = require('fs');
-const portNumber = 3001;
-const dataPath = path.resolve(__dirname, '../database/data.json');
+
+const db = require('./database');
+const ClientError = require('./client-error');
+const staticMiddleware = require('./static-middleware');
+const sessionMiddleware = require('./session-middleware');
+
 const app = express();
-const jsonParserMiddleWare = express.json();
-var dataOnServer = require(dataPath);
-var serverDate = new Date();
 
-app.get('/api/grades', (req, res) => {
-  const data = dataOnServer.grades;
-  res.status(200).send(data);
-  console.log(req.method, 'All Grades', serverDate.toLocaleTimeString());
+app.use(staticMiddleware);
+app.use(sessionMiddleware);
+
+app.use(express.json());
+
+app.get('/api/health-check', (req, res, next) => {
+  db.query('select \'successfully connected\' as "message"')
+    .then(result => res.json(result.rows[0]))
+    .catch(err => next(err));
 });
 
-app.get('/api/grades/:id', (req, res) => {
-  const targetId = req.params.id;
-  if (invalidIdHandle(targetId, res)) {
-    return false;
+app.get('/api/grades', (req, res, next) => {
+  const getSql = `
+    select * from grades
+  `;
+  db.query(getSql)
+    .then(result => res.json(result.rows))
+    .catch(err => next(err));
+});
+
+app.post('/api/grades', (req, res, next) => {
+  const missing = missingFields(req);
+  if (missing) {
+    throw new ClientError(`Missing ${missing.join(', ')} field(s)`, 400);
   }
-  const grade = dataOnServer.grades.find(grade => grade.id === parseInt(targetId));
-  res.status(200).send(grade);
-  console.log(req.method, `id=${req.params.id}`, serverDate.toLocaleTimeString());
+  let receivedGrade = req.body.grade;
+  if (isNaN(parseInt(receivedGrade, 10)) || parseInt(receivedGrade, 10) < 0) {
+    throw new ClientError(`${receivedGrade} is not non-negative number`, 400);
+  }
+  receivedGrade = parseInt(receivedGrade, 10);
+  const insertSql = `
+    insert into grades ("gradeId", name, course, grade, "createdAt")
+    values (default, $1, $2, $3, default)
+    returning *
+  `;
+  const fields = ['name', 'course'];
+  const values = [];
+  for (let index = 0; index < fields.length; index++) {
+    const key = fields[index];
+    values.push(req.body[key]);
+  }
+  values.push(receivedGrade);
+  db.query(insertSql, values)
+    .then(result => res.json(result.rows[0]))
+    .catch(err => next(err));
 });
 
-app.use(jsonParserMiddleWare);
-app.post('/api/grades', (req, res) => {
-  var newGrade = req.body;
-  if (!checkBody(newGrade)) {
-    const errorObject = validateGrade(newGrade);
-    res.status(400).send(errorObject);
-    return false;
-  } else {
-    newGrade.id = dataOnServer.nextId++;
-    dataOnServer.grades.push(newGrade);
-    const stringifiedUpdatedData = JSON.stringify(dataOnServer, null, 2);
-    fs.writeFile(dataPath, stringifiedUpdatedData, fsWriteFileError => {
-      if (fsWriteFileError) {
-        const errorObject = {
-          error: 'Unexpected error occurred.'
-        };
-        res.status(500).send(errorObject);
-        return false;
+app.delete('/api/grades/:gradeId', (req, res, next) => {
+  const gradeId = req.params.gradeId;
+  if (gradeId.match(/\D/g) || isNaN(parseInt(gradeId, 10)) || parseInt(gradeId, 10) <= 0) {
+    throw new ClientError(`${gradeId} is not positive integer`, 400);
+  }
+  const deleteSql = `
+    delete from grades
+    where "gradeId"=$1
+    returning *
+  `;
+  db.query(deleteSql, [gradeId])
+    .then(result => {
+      if (!result.rows[0]) {
+        throw new ClientError(`${gradeId} does not exist`, 404);
+      } else {
+        res.json(result.rows[0]);
       }
-      res.status(201).send(newGrade);
-      console.log(req.method, serverDate.toLocaleTimeString());
-      return true;
+    })
+    .catch(err => next(err));
+});
+
+app.put('/api/grades', (req, res, next) => {
+  const missing = missingFields(req);
+  if (missing) {
+    throw new ClientError(`Missing ${missing.join(', ')} field(s)`, 400);
+  }
+  const gradeId = req.body.gradeId;
+  if (isNaN(parseInt(gradeId, 10)) || parseInt(gradeId, 10) <= 0) {
+    throw new ClientError(`${gradeId} is not positive integer`, 400);
+  }
+  let receivedGrade = req.body.grade;
+  if (gradeId.match(/\D/g) || isNaN(parseInt(receivedGrade, 10)) || parseInt(receivedGrade, 10) < 0) {
+    throw new ClientError(`${receivedGrade} is not non-negative number`, 400);
+  }
+  receivedGrade = parseInt(receivedGrade, 10);
+  const gradesSql = `
+    update grades
+    set name=$2,
+        course=$3,
+        grade=$4
+    where "gradeId"=$1
+    returning *
+  `;
+  const fields = ['gradeId', 'name', 'course'];
+  const values = [];
+  for (let index = 0; index < fields.length; index++) {
+    const key = fields[index];
+    values.push(req.body[key]);
+  }
+  values.push(receivedGrade);
+  db.query(gradesSql, values)
+    .then(result => res.json(result.rows[0]))
+    .catch(err => next(err));
+});
+
+app.use('/api', (req, res, next) => {
+  next(new ClientError(`cannot ${req.method} ${req.originalUrl}`, 404));
+});
+
+app.use((err, req, res, next) => {
+  if (err instanceof ClientError) {
+    res.status(err.status).json({ error: err.message });
+  } else {
+    console.error(err);
+    res.status(500).json({
+      error: 'an unexpected error occurred'
     });
   }
 });
 
-app.delete('/api/grades/:id', (req, res) => {
-  const targetId = req.params.id;
-  if (isIdValid(targetId) && gradeWithTargetId(targetId)) {
-    const targetIndex = dataOnServer.grades.findIndex(grade => grade.id === parseInt(targetId));
-    dataOnServer.grades.splice(targetIndex, 1);
-    const stringifiedUpdatedData = JSON.stringify(dataOnServer, null, 2);
-    fs.writeFile(dataPath, stringifiedUpdatedData, fsWriteFileError => {
-      if (fsWriteFileError) {
-        const errorObject = {
-          error: 'Unexpected error occurred.'
-        };
-        res.status(500).send(errorObject);
-        return false;
-      }
-      res.sendStatus(204);
-      console.log(req.method, serverDate.toLocaleTimeString());
-      return true;
-    });
-  } else {
-    if (invalidIdHandle(targetId, res)) {
-      return false;
-    }
-  }
+app.listen(process.env.PORT, () => {
+  // eslint-disable-next-line no-console
+  console.log(`Server initiated. Listening on port ${process.env.PORT}...\n`);
 });
 
-app.put('/api/grades/:id', (req, res) => {
-  const targetId = req.params.id;
+function missingFields(req) {
+  const fields = ['name', 'course', 'grade'];
+  if (req.method.match(/put/i)) {
+    fields.push('gradeId');
+  }
   const reqBody = req.body;
-  if (isIdValid(targetId) && gradeWithTargetId(targetId) && checkBody(reqBody)) {
-    const targetIndex = dataOnServer.grades.findIndex(grade => grade.id === parseInt(targetId));
-    reqBody.id = parseInt(targetId);
-    dataOnServer.grades.splice(targetIndex, 1, reqBody);
-    const stringifiedUpdatedData = JSON.stringify(dataOnServer, null, 2);
-    fs.writeFile(dataPath, stringifiedUpdatedData, fsWriteFileError => {
-      if (fsWriteFileError) {
-        const errorObject = {
-          error: 'Unexpected error occurred.'
-        };
-        res.status(500).send(errorObject);
-        return false;
-      }
-      res.status(200).send(reqBody);
-      console.log(req.method, serverDate.toLocaleTimeString());
-      return true;
-    });
-  } else {
-    if (invalidIdHandle(targetId, res)) {
-      return false;
-    } else {
-      const errorObject = validateGrade(reqBody);
-      res.status(400).send(errorObject);
-      return false;
+  const missing = [];
+  for (var index = 0; index < fields.length; index++) {
+    const key = fields[index];
+    if (!reqBody[key]) {
+      missing.push(key);
     }
   }
-});
-
-app.patch('/api/grades/:id', (req, res) => {
-  const targetId = req.params.id;
-  const reqBody = req.body;
-  if (isIdValid(targetId) && gradeWithTargetId(targetId)) {
-    const targetIndex = dataOnServer.grades.findIndex(grade => grade.id === parseInt(targetId));
-    reqBody.id = parseInt(targetId);
-    var originalData = dataOnServer.grades[targetIndex];
-    for (var key in originalData) {
-      if (!Object.keys(reqBody).includes(key)) {
-        reqBody[key] = originalData[key];
-      }
-    }
-    dataOnServer.grades.splice(targetIndex, 1, reqBody);
-    const stringifiedUpdatedData = JSON.stringify(dataOnServer, null, 2);
-    fs.writeFile(dataPath, stringifiedUpdatedData, fsWriteFileError => {
-      if (fsWriteFileError) {
-        const errorObject = {
-          error: 'Unexpected error occurred.'
-        };
-        res.status(500).send(errorObject);
-        return false;
-      }
-      res.status(200).send(reqBody);
-      console.log(req.method, serverDate.toLocaleTimeString());
-      return true;
-    });
-  } else {
-    if (invalidIdHandle(targetId, res)) {
-      return false;
-    }
-  }
-});
-
-app.listen(portNumber, () => {
-  console.log(`Server initiated. Listening on port ${portNumber}...\n`);
-});
-
-function isIdValid(id) {
-  return parseInt(id) > 0 && !id.match(/\D/i);
-}
-
-function gradeWithTargetId(id) {
-  if (dataOnServer.grades.find(grade => grade.id === parseInt(id))) {
-    return true;
-  }
-  return false;
-}
-
-function checkBody(newGrade) {
-  if (!newGrade.name || !newGrade.course || !newGrade.grade) {
-    return false;
-  }
-  return true;
-}
-
-function validateGrade(gradeData) {
-  const errors = {};
-  const requiredFields = ['name', 'course', 'grade'];
-  requiredFields.forEach(field => {
-    if (!gradeData[field]) {
-      errors[field] = `${field} is a required field`;
-    }
-  });
-  if (Object.keys(errors).length > 0) {
-    return errors;
-  }
-  return null;
-}
-
-function invalidIdHandle(id, res) {
-  if (!isIdValid(id)) {
-    const errorObject = {
-      error: 'id must be positive integer'
-    };
-    res.status(400).send(errorObject);
-    return true;
-  } else if (!gradeWithTargetId(id)) {
-    const errorObject = {
-      error: 'id does not exist in data'
-    };
-    res.status(404).send(errorObject);
-    return true;
-  }
+  return missing.length === 0 ? null : missing;
 }
