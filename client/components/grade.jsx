@@ -22,7 +22,7 @@ class Grade extends React.Component {
         <td>{this.props.course}</td>
         <td>{this.props.grade}</td>
         <td>
-          <div className="d-flex justify-content-around">
+          <div className="d-flex flex-wrap justify-content-around">
             <div className='btn btn-danger' onClick={this.handleDelete}>DELETE</div>
             <div className='btn btn-warning' onClick={this.handleUpdate}>Update</div>
           </div>
