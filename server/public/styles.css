@@ -13,7 +13,7 @@
   color: white;
 }
 .form-height {
-  height: 270px;
+  height: 320px;
 }
 .table-col-name {
   width: 35%;
@@ -26,4 +26,11 @@
 }
 .table-col-operation {
   width: 35%;
+}
+.input-group-height {
+  height: 62px;
+  align-items: flex-end;
+}
+.missing-value {
+  color: red;
 }
