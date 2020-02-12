@@ -118,11 +118,11 @@ class GradeForm extends React.Component {
 
   render() {
     return (
-      <form className='col-10 col-lg-6 col-xl-3 border border-dark d-flex flex-row flex-wrap mx-auto my-2 py-3 align-items-center justify-content-center form-height' onSubmit={this.handleSubmit}>
+      <form className='col-12 col-lg-6 col-xl-3 border border-dark d-flex flex-row flex-wrap mx-auto my-2 py-3 align-items-center justify-content-center form-height' onSubmit={this.handleSubmit}>
         <div className='d-flex flex-wrap form-group row col-12 input-group-height'>
           {
             this.state.nameError
-              ? <div className='col-9 ml-4 pl-4 missing-value'>Must fill this field!</div>
+              ? <div className='col-12 ml-4 pl-4 missing-value'>Must fill this field!</div>
               : <></>
           }
           <label className='col-2 col-form-label-sm d-flex justify-content-end align-items-center'>
@@ -141,7 +141,7 @@ class GradeForm extends React.Component {
         <div className='d-flex flex-wrap form-group row col-12 input-group-height'>
           {
             this.state.courseError
-              ? <div className='col-9 ml-4 pl-4 missing-value'>Must fill this field!</div>
+              ? <div className='col-12 ml-4 pl-4 missing-value'>Must fill this field!</div>
               : <></>
           }
           <label className='col-2 col-form-label-sm d-flex justify-content-end align-items-center'>
@@ -160,7 +160,7 @@ class GradeForm extends React.Component {
         <div className='d-flex flex-wrap form-group row col-12 input-group-height'>
           {
             this.state.gradeError
-              ? <div className='col-9 ml-4 pl-4 missing-value'>Must fill this field!</div>
+              ? <div className='col-12 ml-4 pl-4 missing-value'>Must fill this field!</div>
               : <></>
           }
           <label className='col-2 col-form-label-sm d-flex justify-content-end align-items-center'>
